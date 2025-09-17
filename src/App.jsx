@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { getGuestList } from "./api/guests";
+import { getGuestList, getGuestDetails } from "./api/guests";
 import GuestList from "./components/GuestList";
+import GuestDetails from "./components/GuestDetails";
 
 export default function App() {
   const [guestList, setGuestList] = useState([]);
+  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [selectedGuestId, setSelectedGuestId] = useState(null);
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const result = await getGuestList();
-        setGuestList(result);
+        const data = await getGuestList();
+        setGuestList(data);
       } catch (error) {
         console.error(error);
       }
@@ -17,13 +21,42 @@ export default function App() {
     loadData();
   }, []);
 
+  // fetch single recipe
+  useEffect(() => {
+    async function loadGuestDetails() {
+      setLoader(true);
+      try {
+        const data = await getGuestDetails(selectedGuestId);
+        setSelectedGuest(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoader(false);
+      }
+    }
+    loadGuestDetails();
+  }, [selectedGuestId]);
+
   return (
     <>
       <header>
         <h1>Guests</h1>
       </header>
       <main>
-        <GuestList guestList={guestList} />
+        {!selectedGuest ? (
+          <GuestList
+            guestList={guestList}
+            setSelectedGuestId={setSelectedGuestId}
+          />
+        ) : (
+          <GuestDetails
+            selectedGuest={selectedGuest}
+            back={() => {
+              setSelectedGuest(null);
+              setSelectedGuestId(null);
+            }}
+          />
+        )}
       </main>
     </>
   );
