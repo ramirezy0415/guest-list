@@ -7,7 +7,6 @@ export default function App() {
   const [guestList, setGuestList] = useState([]);
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [selectedGuestId, setSelectedGuestId] = useState(null);
-  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -24,14 +23,11 @@ export default function App() {
   // fetch single recipe
   useEffect(() => {
     async function loadGuestDetails() {
-      setLoader(true);
       try {
         const data = await getGuestDetails(selectedGuestId);
         setSelectedGuest(data);
       } catch (error) {
         console.error(error);
-      } finally {
-        setLoader(false);
       }
     }
     loadGuestDetails();
@@ -44,10 +40,13 @@ export default function App() {
       </header>
       <main>
         {!selectedGuest ? (
-          <GuestList
-            guestList={guestList}
-            setSelectedGuestId={setSelectedGuestId}
-          />
+          <>
+            <h2>Select a guest from the table below for more details</h2>
+            <GuestList
+              guestList={guestList}
+              setSelectedGuestId={setSelectedGuestId}
+            />
+          </>
         ) : (
           <GuestDetails
             selectedGuest={selectedGuest}

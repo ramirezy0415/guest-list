@@ -1,21 +1,26 @@
 export default function guest({ guestList, setSelectedGuestId }) {
   return (
-    <ul>
+    <table>
+      <tr>
+        <th>Guest Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+      </tr>
       {guestList.map((guest) => {
         return (
-          <li
+          <tr
             key={guest.id}
-            className="list-item"
             onClick={() => {
               setSelectedGuestId(guest.id);
             }}
+            className="guest"
           >
-            <p>{guest.name}</p>
-            <p>{guest.email}</p>
-            <p>{guest.phone}</p>
-          </li>
+            <td>{guest.name}</td>
+            <td>{guest.email}</td>
+            <td>{guest.phone}</td>
+          </tr>
         );
       })}
-    </ul>
+    </table>
   );
 }
